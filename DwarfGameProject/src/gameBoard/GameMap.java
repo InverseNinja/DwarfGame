@@ -1,0 +1,74 @@
+package gameBoard;
+
+import java.util.ArrayList;
+
+import entities.Entity;
+
+public class GameMap {
+	
+	private Entity gameMap[][];
+	
+	private int height;
+	
+	private int width;
+
+	private ArrayList<Entity> containedEntities;
+	
+	public GameMap(int width, int height){
+		this.width = width;
+		this.height = height;
+		gameMap = new Entity[width][height];
+		containedEntities = new ArrayList<Entity>();
+	}
+	
+	public void addEntity(int x, int y, Entity entity){
+		entity.setCoordinates(x, y);
+		this.addEntity(entity);
+	}
+	
+	public void addEntity(Entity entity){
+		gameMap[entity.getXCoordinate()][entity.getYCoordinate()] = entity;
+		containedEntities.add(entity);
+	}
+	
+	public void removeEntity(int x, int y){
+		containedEntities.remove(gameMap[x][y]);
+		gameMap[x][y] = null;
+	}
+	
+	public void moveEntity(int xStart, int yStart, int xEnd, int yEnd) throws Exception{
+		if(gameMap[xStart][yStart]==null){
+			throw new Exception("Tried to move entity at: ("+xStart+","+yStart+") but this location contained null.");
+		}
+		
+		gameMap[xEnd][yEnd] = gameMap[xStart][yStart];
+		gameMap[xStart][yStart] = null;
+		gameMap[xEnd][yEnd].setCoordinates(xEnd, yEnd);
+	}
+	
+	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
+		if(!containedEntities.contains(entity)){
+			throw new Exception("The entity: "+entity.toString()+" is not located on this map.");
+		}
+
+		if(gameMap[entity.getXCoordinate()][entity.getYCoordinate()] != entity){
+			throw new Exception("According to this map, a different entity at the given entities location already exists.");
+		}
+		
+		this.moveEntity(entity.getXCoordinate(), entity.getYCoordinate(), xEnd, yEnd);
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public int getWidth() {
+		return width;
+	}
+	
+	public Entity getEntityAtLocation(int x, int y){
+		return gameMap[x][y];
+	}
+
+}
