@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.Vector;
-
 public abstract class Entity {
 
 	private int[] coordinates = new int[2];
