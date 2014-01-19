@@ -8,12 +8,23 @@ public class GameMap {
 	
 	private Entity gameMap[][];
 	
+	/**
+	 * This is the height of the map in cells or how many cells will be contained per column (up to down)
+	 */
 	private int height;
 	
+	/**
+	 * This is the width of the map in cells or how many cells will be contained per row (left to right)
+	 */
 	private int width;
 
 	private ArrayList<Entity> containedEntities;
 	
+	/**
+	 * Creates a gameMap with the given dimensions
+	 * @param width The width of the map in cells
+	 * @param height The height of the map in cells
+	 */
 	public GameMap(int width, int height){
 		this.width = width;
 		this.height = height;

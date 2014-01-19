@@ -9,6 +9,7 @@ import entities.Dwarf;
 import entities.Entity;
 import entities.Gold;
 import gameBoard.GameMap;
+import graphics.WorldWindow;
 
 public class Game {
 
@@ -22,9 +23,10 @@ public class Game {
 	
 	private Entity player;
 	
-	private JFrame jpnl;
+	private JFrame frame;
 	
-	private JLabel jtf;
+	
+	private WorldWindow theWorldsWindow;
 	
 
 	public static void main(String[] args){
@@ -41,12 +43,14 @@ public class Game {
 		KeyboardManager kbm = new KeyboardManager();
 		
 
-		jpnl = new JFrame();
-		jpnl.addKeyListener(kbm);
-		jpnl.setVisible(true);
+		frame = new JFrame();
+		frame.addKeyListener(kbm);
+		frame.setVisible(true);
 		
-		jtf = new JLabel();
-		jpnl.add(jtf);
+		theWorldsWindow = new WorldWindow();
+		
+//		jtf = new JLabel();
+		frame.add(theWorldsWindow);
 		
 		player = new Dwarf();
 		gmap = new GameMap(10, 10);
@@ -72,7 +76,8 @@ public class Game {
 			}
 			
 			//render objects
-			this.renderMap(gmap);
+			theWorldsWindow.drawWorld(gmap);
+			
 			//check game state
 
 			GAME_TIME_IN_TICKS++;
@@ -116,29 +121,4 @@ public class Game {
 		}
 	}
 	
-	private void renderMap(GameMap g){
-		
-		String renderString = "<html><font size=\"20\">";
-		
-		for(int height = 0; height < g.getHeight();height++){
-			for(int width = 0; width < g.getWidth();width++){
-				Entity e = g.getEntityAtLocation(width, height);
-				if(e == null){
-					renderString += "&#9617";
-				}else{
-					if(e instanceof Dwarf)
-						renderString += "웃";
-
-					if(e instanceof Gold)
-						renderString += "&#8773";
-				}
-			}
-
-			renderString += "<br>";
-		}
-		
-		renderString += "</font></html>";
-		jtf.setText(renderString);
-		
-	}
 }
