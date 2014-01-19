@@ -2,12 +2,12 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.List;
 
 import javax.swing.JPanel;
 
 import entities.Dwarf;
 import entities.Entity;
+import entities.Gold;
 import gameBoard.GameMap;
 
 public class WorldWindow extends JPanel{
@@ -40,8 +40,9 @@ public class WorldWindow extends JPanel{
 				if(entityBeingDrawn != null){
 					
 					if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
-						graphicsObject.setColor(Color.RED);
-						graphicsObject.fillOval(x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+						EntityDrawer.drawDwarf(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+					}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
+						EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 					}
 				}
 				
