@@ -33,12 +33,12 @@ public class GameMap {
 	}
 	
 	public void addEntity(int x, int y, Entity entity){
-		entity.setCoordinates(x, y);
+		entity.setTileCoordinates(x, y);
 		this.addEntity(entity);
 	}
 	
 	public void addEntity(Entity entity){
-		gameMap[entity.getXCoordinate()][entity.getYCoordinate()] = entity;
+		gameMap[entity.getXTileCoordinate()][entity.getYTileCoordinate()] = entity;
 		containedEntities.add(entity);
 	}
 	
@@ -54,7 +54,7 @@ public class GameMap {
 		
 		gameMap[xEnd][yEnd] = gameMap[xStart][yStart];
 		gameMap[xStart][yStart] = null;
-		gameMap[xEnd][yEnd].setCoordinates(xEnd, yEnd);
+		gameMap[xEnd][yEnd].setTileCoordinates(xEnd, yEnd);
 	}
 	
 	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
@@ -62,11 +62,11 @@ public class GameMap {
 			throw new Exception("The entity: "+entity.toString()+" is not located on this map.");
 		}
 
-		if(gameMap[entity.getXCoordinate()][entity.getYCoordinate()] != entity){
-			throw new Exception("According to this map, a different entity at the given entities location already exists.");
+		if(gameMap[entity.getXTileCoordinate()][entity.getYTileCoordinate()] != entity){
+			throw new Exception("According to this map, a different entity at the given entities location ("+entity.getXTileCoordinate()+","+entity.getYTileCoordinate()+") already exists.");
 		}
 		
-		this.moveEntity(entity.getXCoordinate(), entity.getYCoordinate(), xEnd, yEnd);
+		this.moveEntity(entity.getXTileCoordinate(), entity.getYTileCoordinate(), xEnd, yEnd);
 	}
 
 	public int getHeight() {
@@ -80,6 +80,10 @@ public class GameMap {
 	
 	public Entity getEntityAtLocation(int x, int y){
 		return gameMap[x][y];
+	}
+	
+	public ArrayList<Entity> getContainedEntities(){
+		return containedEntities;
 	}
 
 }

@@ -17,6 +17,10 @@ public class GameFrame extends JFrame{
 	
 	private Entity player;
 	
+	public int cellWidth = 80;
+	
+	public int cellHeight = 80;
+	
 	public GameFrame(){
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(800, 600);
@@ -33,11 +37,15 @@ public class GameFrame extends JFrame{
 		if(theWorldsWindow != null){
 			this.remove(theWorldsWindow);
 		}
-		theWorldsWindow = new WorldWindow(gmap);
+		theWorldsWindow = new WorldWindow(gmap, cellWidth, cellHeight);
 		this.add(theWorldsWindow);
 		
 		if(player != null){
 			theWorldsWindow.setPerspective(player);
 		}
+	}
+
+	public void toggleGrid() {
+		theWorldsWindow.setShowGrid(!theWorldsWindow.getShowGrid());
 	}
 }

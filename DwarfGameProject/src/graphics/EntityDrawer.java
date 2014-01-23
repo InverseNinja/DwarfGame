@@ -11,8 +11,6 @@ import entities.Dwarf;
 public class EntityDrawer {
 
 	private static Image goldImage;
-	
-	private static Image dwarfImage;
 
 	private static Image emptyGroundImage;
 
@@ -34,9 +32,6 @@ public class EntityDrawer {
 	 * @param dwarf
 	 */
 	public static void drawDwarf(Graphics graphicsObject, int xCoordinate, int yCoordinate, int width, int height, Dwarf dwarf){
-		if(dwarfImage == null){//if its null lets load the image
-			dwarfImage = new ImageIcon("Resources\\Entityimages\\dwarf\\dwarf.png").getImage();
-		}
 		
 		int facing = dwarf.getFacingDirection();
 		Image drawImage;

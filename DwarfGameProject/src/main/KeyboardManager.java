@@ -6,34 +6,59 @@ import java.util.ArrayList;
 
 public class KeyboardManager implements KeyListener{
 
-	//This is the array that will hold the keys that are currently pressed.
-	private ArrayList<Integer> pressedKeys;
+	//This is the array that will hold non-movement keys that are currently pressed.
+	private ArrayList<Integer> otherPressedKeys;
+	
+	//This is the array that will hold movement related keys
+	private ArrayList<Integer> pressedMovementKeys;
 
 	//Just used for now to monitor performance
 	private int eventsProccessed = 0;
 
 	public KeyboardManager(){
-		pressedKeys = new ArrayList<Integer>(); 
+		otherPressedKeys = new ArrayList<Integer>(); 
+		pressedMovementKeys = new ArrayList<Integer>();
 	}
 
-	public synchronized ArrayList<Integer> getPressedKeys(){
-		return pressedKeys;
+	public synchronized ArrayList<Integer> getOtherPressedKeys(){
+		return otherPressedKeys;
+	}
+	
+	public synchronized ArrayList<Integer> getPressedMovementKeys(){
+		return pressedMovementKeys;
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		int keyCode = arg0.getKeyCode();
 
-		if(getPressedKeys().contains(keyCode) == false){
-			getPressedKeys().add(keyCode);
+		if(keyCode == 65 || keyCode == 68 || keyCode == 83 || keyCode == 87){
+			if(getPressedMovementKeys().contains(keyCode) == false){
+				getPressedMovementKeys().add(keyCode);
+			}
+			
+		}else{
+			if(getOtherPressedKeys().contains(keyCode) == false){
+				getOtherPressedKeys().add(keyCode);
+			}
+	
 		}
-
 		eventsProccessed++;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		getPressedKeys().remove((Object)arg0.getKeyCode());
+		int keyCode = arg0.getKeyCode();
+		if(keyCode == 65 || keyCode == 68 || keyCode == 83 || keyCode == 87){
+			if(getPressedMovementKeys().contains(keyCode) == true){
+				getPressedMovementKeys().remove((Integer)keyCode);
+			}
+		}else{
+			if(getOtherPressedKeys().contains(keyCode) == true){
+				getOtherPressedKeys().remove((Integer)keyCode);
+			}
+	
+		}
 		eventsProccessed++;
 	}
 

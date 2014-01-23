@@ -26,12 +26,16 @@ public class WorldWindow extends JPanel{
 	private GameMap gmap;
 
 	private Entity focusedPlayer;
-	
+
 	private float MAX_RANGE = 4;
 
-	public WorldWindow(GameMap gmap){
+	private boolean drawGridOutline = true;
+
+	public WorldWindow(GameMap gmap, int cellWidth, int cellHeight){
 		this.gmap = gmap;
 		this.setDoubleBuffered(true);
+		this.cellHeight = cellHeight;
+		this.cellWidth = cellWidth;
 	}
 
 	@Override
@@ -40,7 +44,7 @@ public class WorldWindow extends JPanel{
 		super.paintComponent(g2d);
 		drawWorld(g2d);
 	}
-	
+
 	/**
 	 * This method will draw the given gameMap
 	 * @param gmap
@@ -54,29 +58,34 @@ public class WorldWindow extends JPanel{
 
 				Entity entityBeingDrawn = gmap.getEntityAtLocation(x, y);//this is the entity we are going to draw.
 
-				int range = Distance.range(focusedPlayer.getXCoordinate(), focusedPlayer.getYCoordinate(), x, y);
+				int range = Distance.range(focusedPlayer.getXTileCoordinate(), focusedPlayer.getYTileCoordinate(), x, y);
 				if(range > MAX_RANGE){
 					EntityDrawer.drawDarkTile(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 				}else{
-					
+
 					EntityDrawer.drawEmptyGround(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
-					
+
 					if(entityBeingDrawn != null){
-					
+
+						
+						double offsets[] = Distance.getPixleOffsets( entityBeingDrawn.getMovementVectorLength(),entityBeingDrawn.getFacingDirection());
+						System.out.println("Length left: "+entityBeingDrawn.getMovementVectorLength()+" Offsets: "+offsets[0]+","+offsets[1]);
 						if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
-							EntityDrawer.drawDwarf(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight, (Dwarf)entityBeingDrawn);
+							EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], y*cellHeight+(int)offsets[1], cellWidth, cellHeight, (Dwarf)entityBeingDrawn);
 						}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
 							EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 						}
-						
+
 					}
-					
+
 					EntityDrawer.drawFog(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight,(1-Math.min(1.0f,range/MAX_RANGE)));
 				}
 
-				//draw the cell outline
-				graphicsObject.setColor(Color.BLUE);
-				graphicsObject.drawRect(x*cellWidth, y*cellWidth, cellWidth, cellHeight);
+				if(drawGridOutline ==true){
+					//draw the cell outline
+					graphicsObject.setColor(Color.BLUE);
+					graphicsObject.drawRect(x*cellWidth, y*cellWidth, cellWidth, cellHeight);
+				}
 			}
 		}
 
@@ -84,5 +93,13 @@ public class WorldWindow extends JPanel{
 
 	public void setPerspective(Entity player) {
 		this.focusedPlayer = player;
+	}
+
+	public boolean getShowGrid() {
+		return this.drawGridOutline;
+	}
+
+	public void setShowGrid(boolean b) {
+		this.drawGridOutline = b;
 	}
 }

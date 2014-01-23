@@ -2,39 +2,68 @@ package entities;
 
 public abstract class Entity {
 
-	private int[] coordinates = new int[2];
-	
+	private int[] tileCoordinates = new int[2];
+
 	private int facingDirection = 2;
+
+	private double movementVectorLength;//pixels
+
+	private double speed = 5;//pixels/tick
 	
-	public int[] getCoordinates(){
-		return coordinates;
+	private static final double SQRT2 = Math.sqrt(2);
+
+	public double getMovementVectorLength() {
+		return movementVectorLength;
 	}
-	
-	public void setCoordinates(int x, int y){
-		this.setXCoordinate(x);
-		this.setYCoordinate(y);
+
+	public void setMovementVectorLength(double movementVectorLength) {
+		if(facingDirection%2 == 0){
+		this.movementVectorLength = movementVectorLength;
+		}else{
+			this.movementVectorLength = movementVectorLength * SQRT2;
+		}
 	}
-	
-	public void setXCoordinate(int x){
-		coordinates[0] = x;
+
+
+	public void tick(){
+
+		//Move
+		if(movementVectorLength-speed < 0){
+			movementVectorLength = 0;
+		}else{
+			movementVectorLength -= speed;
+		}
 	}
-	
-	public void setYCoordinate(int y){
-		coordinates[1] = y;
+
+	public int[] getTileCoordinates(){
+		return tileCoordinates;
 	}
-	
-	public int getXCoordinate(){
-		return this.getCoordinates()[0];
+
+	public void setTileCoordinates(int x, int y){
+		this.setXTileCoordinate(x);
+		this.setYTileCoordinate(y);
 	}
-	
-	public int getYCoordinate(){
-		return this.getCoordinates()[1];
+
+	public void setXTileCoordinate(int x){
+		tileCoordinates[0] = x;
 	}
-	
+
+	public void setYTileCoordinate(int y){
+		tileCoordinates[1] = y;
+	}
+
+	public int getXTileCoordinate(){
+		return this.getTileCoordinates()[0];
+	}
+
+	public int getYTileCoordinate(){
+		return this.getTileCoordinates()[1];
+	}
+
 	public int getFacingDirection(){
 		return facingDirection;
 	}
-	
+
 	public void setFacingDirection(int facingDirection){
 		this.facingDirection = facingDirection;
 	}

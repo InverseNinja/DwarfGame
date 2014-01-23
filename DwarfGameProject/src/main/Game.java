@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -14,7 +15,7 @@ public class Game {
 
 	private boolean gameInProgress;
 
-	public static final long TICK_RATE = 200;
+	public static final long TICK_RATE = 20;
 
 	private static int GAME_TIME_IN_TICKS = 0;
 
@@ -42,11 +43,11 @@ public class Game {
 						// TODO Auto-generated method stub
 						game.startGame();
 					}
-					
+
 				});
 				t.start();
 			}
-			
+
 		});
 	}
 
@@ -69,7 +70,7 @@ public class Game {
 		gmap = new GameMap(50, 50);
 		gmap.addEntity(player);
 		gmap.addEntity(5,5,new Gold());
-		
+
 		gameUI.setFocusedPlayer(player);
 		gameUI.setWorld(gmap);
 	}
@@ -88,18 +89,22 @@ public class Game {
 			currentTime = System.currentTimeMillis();
 
 			//take action
-			List<Integer> actionsTaken = kbm.getPressedKeys();
+			List<Integer> otherActionsTaken = kbm.getOtherPressedKeys();
+			List<Integer> movementActionsTaken = kbm.getPressedMovementKeys();
 
 			//update objects
 			try {
-				this.handleKeysPressed(actionsTaken);
+				this.handleKeysPressed(otherActionsTaken, movementActionsTaken);
+				for(Entity e: gmap.getContainedEntities()){
+					e.tick();
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 
 			//render objects
-//			gameUI.paintComponents(gameUI.getGraphics());
-//			gameUI.repaint();
+			//			gameUI.paintComponents(gameUI.getGraphics());
+			//			gameUI.repaint();
 			SwingUtilities.invokeLater(new Runnable(){
 
 				@Override
@@ -107,10 +112,10 @@ public class Game {
 					// TODO Auto-generated method stub
 					gameUI.repaint();
 				}
-				
+
 			});
-			
-			
+
+
 			//check game state
 			//TODO: check for victory conditions and end game if needed
 
@@ -130,31 +135,94 @@ public class Game {
 			//Print performance stats.
 			long cycleTime = System.currentTimeMillis()-startTime;
 			if(cycleTime > 1000){
-//				System.out.println(GAME_TIME_IN_TICKS-lastTick+" ticks per seccond with "+kbm.getEventsSinceLastCall()+" events with cycle time "+cycleTime+"ms.");
+				//				System.out.println(GAME_TIME_IN_TICKS-lastTick+" ticks per seccond with "+kbm.getEventsSinceLastCall()+" events with cycle time "+cycleTime+"ms.");
 				lastTick = GAME_TIME_IN_TICKS;
 				startTime = System.currentTimeMillis();
 			}
 		}
 	}
 
-	private void handleKeysPressed(List<Integer> pressedKeys) throws Exception{
-		for(Integer keyCode : pressedKeys){
+	private void handleKeysPressed(List<Integer> otherKeys, List<Integer> movementKeys) throws Exception{
+		if(movementKeys.size()>0 && player.getMovementVectorLength() ==0){
+			int xGridOffset = 0;
+			int yGridOffset = 0;
+			switch(movementKeys.size()){
+			case 1: 
+				switch(movementKeys.get(0)){
+				case 65: //left
+					xGridOffset = -1;
+					player.setFacingDirection(4);
+					break;
+				case 68: //right
+					xGridOffset = 1;
+					player.setFacingDirection(6);
+					break;
+				case 83: //down
+					yGridOffset = 1;
+					player.setFacingDirection(2);
+					break;
+				case 87: //up
+					yGridOffset = -1;
+					player.setFacingDirection(8);
+					break;
+				}
+				break;
+			case 2: 
+				int sum = movementKeys.get(0) + movementKeys.get(1);
+				switch(sum){
+				case (87+65)://NW
+					xGridOffset = -1;
+				yGridOffset = -1;
+				player.setFacingDirection(7);
+				break;
+				case (87+68): //NE
+					xGridOffset = 1;
+				yGridOffset = -1;
+				player.setFacingDirection(9);
+				break;
+				case (83+65): //SW
+					xGridOffset = -1;
+				yGridOffset = 1;
+				player.setFacingDirection(1);
+				break;
+				case (83+68): //SE
+					xGridOffset = 1;
+				yGridOffset = 1;
+				player.setFacingDirection(3);
+				break;
+				}
+				break;
+			case 3: //down
+				int sum2 = movementKeys.get(0)+movementKeys.get(1)+movementKeys.get(2);
+				switch(sum2){
+				case 235: //left
+					xGridOffset = -1;
+					player.setFacingDirection(4);
+					break;
+				case 238: //right
+					xGridOffset = 1;
+					player.setFacingDirection(6);
+					break;
+				case 216: //down
+					yGridOffset = 1;
+					player.setFacingDirection(2);
+					break;
+				case 220: //up
+					yGridOffset = -1;
+					player.setFacingDirection(8);
+					break;
+				}
+				break;
+
+			}
+			gmap.moveEntity(player, player.getXTileCoordinate()+xGridOffset, player.getYTileCoordinate()+yGridOffset);
+			player.setMovementVectorLength(gameUI.cellHeight);
+		}
+
+		for(Integer keyCode : otherKeys){
 			switch(keyCode){
-			case 65: //left
-				gmap.moveEntity(player, player.getXCoordinate()-1, player.getYCoordinate());
-				player.setFacingDirection(4);
-				break;
-			case 68: //right
-				gmap.moveEntity(player, player.getXCoordinate()+1, player.getYCoordinate());
-				player.setFacingDirection(6);
-				break;
-			case 83: //down
-				gmap.moveEntity(player, player.getXCoordinate(), player.getYCoordinate()+1);
-				player.setFacingDirection(2);
-				break;
-			case 87: //up
-				gmap.moveEntity(player, player.getXCoordinate(), player.getYCoordinate()-1);
-				player.setFacingDirection(8);
+			case 61: //tab
+				gameUI.toggleGrid();
 				break;
 			}
 		}
