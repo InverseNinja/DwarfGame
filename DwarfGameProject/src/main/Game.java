@@ -8,6 +8,8 @@ import entities.Dwarf;
 import entities.Entity;
 import entities.Gold;
 import gameBoard.GameMap;
+import graphics.Animation;
+import graphics.Fire;
 import graphics.GameFrame;
 
 public class Game {
@@ -69,7 +71,7 @@ public class Game {
 		gmap = new GameMap(50, 50);
 		gmap.addEntity(player);
 		gmap.addEntity(5,5,new Gold());
-
+		gmap.animations.add(new Fire());
 		gameUI.setFocusedPlayer(player);
 		gameUI.setWorld(gmap);
 	}
@@ -96,6 +98,9 @@ public class Game {
 				this.handleKeysPressed(otherActionsTaken, movementActionsTaken);
 				for(Entity e: gmap.getContainedEntities()){
 					e.tick();
+				}
+				for(Animation a: gmap.animations){
+					a.update();
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -142,7 +147,7 @@ public class Game {
 	}
 
 	private void handleKeysPressed(List<Integer> otherKeys, List<Integer> movementKeys) throws Exception{
-//		System.out.println(otherKeys.size()+", "+movementKeys.size());
+//		System.out.println(otherKeys.size()+", "+movementKeys.size());s
 		if(movementKeys.size()>0 && player.getMovementVectorLength() ==0){
 			int xGridOffset = 0;
 			int yGridOffset = 0;

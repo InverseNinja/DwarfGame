@@ -30,7 +30,8 @@ public class WorldWindow extends JPanel{
 	private float MAX_RANGE = 7;
 
 	private boolean drawGridOutline = true;
-
+	
+	
 	public WorldWindow(GameMap gmap, int cellWidth, int cellHeight){
 		this.gmap = gmap;
 		this.setDoubleBuffered(true);
@@ -84,6 +85,10 @@ public class WorldWindow extends JPanel{
 
 
 			}
+		}
+		
+		for(Animation a: gmap.animations){
+			a.draw(graphicsObject, cellWidth, cellHeight);
 		}
 		
 		for(int y = 0; y < gmap.getHeight(); y++ ){//well start with each row

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.Entity;
+import graphics.Animation;
 
 public class GameMap {
 	
@@ -22,6 +23,8 @@ public class GameMap {
 	private int width;
 
 	private ArrayList<Entity> containedEntities;
+	
+	public ArrayList<Animation> animations = new ArrayList<Animation>();
 	
 	/**
 	 * Creates a gameMap with the given dimensions
