@@ -76,7 +76,7 @@ public class WorldWindow extends JPanel{
 				if(entityBeingDrawn != null){
 					double offsets[] = Distance.getPixleOffsets( entityBeingDrawn.getMovementVectorLength(),entityBeingDrawn.getFacingDirection());
 					if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
-						EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], y*cellHeight+(int)offsets[1], cellWidth, cellHeight, (Dwarf)entityBeingDrawn);
+						EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], (y*cellHeight+(int)offsets[1])-cellHeight*(entityBeingDrawn.getWidthInTiles()-1), cellWidth*entityBeingDrawn.getWidthInTiles(), cellHeight*entityBeingDrawn.getWidthInTiles(), (Dwarf)entityBeingDrawn);
 					}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
 						EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 					}

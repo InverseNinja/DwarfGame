@@ -38,14 +38,50 @@ public class GameMap {
 		containedEntities = new ArrayList<Entity>();
 	}
 	
-	public void addEntity(int x, int y, Entity entity){
+//	public void addEntity(int x, int y, Entity entity){
+//		entity.setTileCoordinates(x, y);
+//		this.addEntity(entity);
+//	}
+	
+	private void placeEntity(int x, int y, Entity entity){
+		System.out.println("Placing entity at: "+x+", "+y);
+		int width = entity.getWidthInTiles();
+		int height = entity.getHeightInTiles();
+		for(int i = 0; i < height; i++){
+			for(int c = 0; c < width; c++){
+				gameMap[c+x][y-i] = entity;
+			}
+		}
 		entity.setTileCoordinates(x, y);
-		this.addEntity(entity);
+	}
+	
+	private boolean validPlacement(int x, int y, Entity entity){
+		int width = entity.getWidthInTiles();
+		int height = entity.getHeightInTiles();
+		boolean validPlacement = true;
+		for(int i = 0; i < height; i++){
+			for(int c = 0; c < width; c++){
+				
+				if(gameMap[c+x][y-i] != null && gameMap[c+x][y-i] != entity){
+					validPlacement = false;
+					break;
+				}
+			}
+		}
+		return validPlacement;
+	}
+	
+	public void addEntity(int x, int y, Entity entity){
+		boolean validPlacement = this.validPlacement(x, y, entity);
+		if(validPlacement){
+			this.placeEntity(x, y, entity);
+		}
+		entity.setTileCoordinates(x, y);
+		containedEntities.add(entity);
 	}
 	
 	public void addEntity(Entity entity){
-		gameMap[entity.getXTileCoordinate()][entity.getYTileCoordinate()] = entity;
-		containedEntities.add(entity);
+		this.addEntity(entity.getXTileCoordinate(),entity.getYTileCoordinate(), entity);
 	}
 	
 	public void removeEntity(int x, int y){
@@ -53,15 +89,27 @@ public class GameMap {
 		gameMap[x][y] = null;
 	}
 	
-	public void moveEntity(int xStart, int yStart, int xEnd, int yEnd) throws Exception{
-		if(gameMap[xStart][yStart]==null){
-			throw new Exception("Tried to move entity at: ("+xStart+","+yStart+") but this location contained null.");
-		}
-		
-		gameMap[xEnd][yEnd] = gameMap[xStart][yStart];
-		gameMap[xStart][yStart] = null;
-		gameMap[xEnd][yEnd].setTileCoordinates(xEnd, yEnd);
-	}
+//	public void moveEntity(int xStart, int yStart, int xEnd, int yEnd) throws Exception{
+//		if(gameMap[xStart][yStart]==null){
+//			throw new Exception("Tried to move entity at: ("+xStart+","+yStart+") but this location contained null.");
+//		}
+//		
+//		gameMap[xEnd][yEnd] = gameMap[xStart][yStart];
+//		gameMap[xStart][yStart] = null;
+//		gameMap[xEnd][yEnd].setTileCoordinates(xEnd, yEnd);
+//	}
+	
+//	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
+//		if(!containedEntities.contains(entity)){
+//			throw new Exception("The entity: "+entity.toString()+" is not located on this map.");
+//		}
+//
+//		if(gameMap[entity.getXTileCoordinate()][entity.getYTileCoordinate()] != entity){
+//			throw new Exception("According to this map, a different entity at the given entities location ("+entity.getXTileCoordinate()+","+entity.getYTileCoordinate()+") already exists.");
+//		}
+//		
+//		this.moveEntity(entity.getXTileCoordinate(), entity.getYTileCoordinate(), xEnd, yEnd);
+//	}
 	
 	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
 		if(!containedEntities.contains(entity)){
@@ -72,7 +120,19 @@ public class GameMap {
 			throw new Exception("According to this map, a different entity at the given entities location ("+entity.getXTileCoordinate()+","+entity.getYTileCoordinate()+") already exists.");
 		}
 		
-		this.moveEntity(entity.getXTileCoordinate(), entity.getYTileCoordinate(), xEnd, yEnd);
+		if(this.validPlacement(xEnd, yEnd, entity)){
+			//clean up the current occupied tiles.
+			int width = entity.getWidthInTiles();
+			int height = entity.getHeightInTiles();
+			int x = entity.getXTileCoordinate();
+			int y = entity.getYTileCoordinate();
+			for(int i = 0; i < height; i++){
+				for(int c = 0; c < width; c++){
+					gameMap[c+x][y-i] = null;
+				}
+			}
+			this.placeEntity(xEnd, yEnd, entity);
+		}
 	}
 
 	public int getHeight() {

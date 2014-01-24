@@ -69,7 +69,7 @@ public class Game {
 
 		//Add the player and entites to the map
 		gmap = new GameMap(50, 50);
-		gmap.addEntity(player);
+		gmap.addEntity(0,1,player);
 		gmap.addEntity(5,5,new Gold());
 		gmap.animations.add(new Fire());
 		gameUI.setFocusedPlayer(player);

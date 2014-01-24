@@ -11,6 +11,10 @@ public abstract class Entity {
 	private double speed = 5;//pixels/tick
 	
 	private static final double SQRT2 = Math.sqrt(2);
+	
+	private int widthInTiles = 2;
+
+	private int heightInTiles = 2;
 
 	public double getMovementVectorLength() {
 		return movementVectorLength;
@@ -66,5 +70,21 @@ public abstract class Entity {
 
 	public void setFacingDirection(int facingDirection){
 		this.facingDirection = facingDirection;
+	}
+
+	public int getWidthInTiles() {
+		return widthInTiles;
+	}
+
+	public void setWidthInTiles(int widthInTiles) {
+		this.widthInTiles = widthInTiles;
+	}
+
+	public int getHeightInTiles() {
+		return heightInTiles;
+	}
+
+	public void setHeightInTiles(int heightInTiles) {
+		this.heightInTiles = heightInTiles;
 	}
 }
