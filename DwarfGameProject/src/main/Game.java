@@ -1,6 +1,5 @@
 package main;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -143,6 +142,7 @@ public class Game {
 	}
 
 	private void handleKeysPressed(List<Integer> otherKeys, List<Integer> movementKeys) throws Exception{
+//		System.out.println(otherKeys.size()+", "+movementKeys.size());
 		if(movementKeys.size()>0 && player.getMovementVectorLength() ==0){
 			int xGridOffset = 0;
 			int yGridOffset = 0;

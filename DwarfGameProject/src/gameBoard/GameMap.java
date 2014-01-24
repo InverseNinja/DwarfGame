@@ -1,12 +1,15 @@
 package gameBoard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import entities.Entity;
 
 public class GameMap {
 	
 	private Entity gameMap[][];
+	
+	private List<ArrayList<Entity>> sortedEntitiesByHeight = new ArrayList<ArrayList<Entity>>();
 	
 	/**
 	 * This is the height of the map in cells or how many cells will be contained per column (up to down)

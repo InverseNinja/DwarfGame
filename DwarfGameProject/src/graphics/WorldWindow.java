@@ -27,7 +27,7 @@ public class WorldWindow extends JPanel{
 
 	private Entity focusedPlayer;
 
-	private float MAX_RANGE = 4;
+	private float MAX_RANGE = 7;
 
 	private boolean drawGridOutline = true;
 
@@ -55,30 +55,42 @@ public class WorldWindow extends JPanel{
 		//Now we want to loop through each cell in he map grid and draw it.
 		for(int y = 0; y < gmap.getHeight(); y++ ){//well start with each row
 			for(int x = 0; x < gmap.getWidth(); x++){//and then go through each x coordinate
-
-				Entity entityBeingDrawn = gmap.getEntityAtLocation(x, y);//this is the entity we are going to draw.
-
 				int range = Distance.range(focusedPlayer.getXTileCoordinate(), focusedPlayer.getYTileCoordinate(), x, y);
 				if(range > MAX_RANGE){
 					EntityDrawer.drawDarkTile(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 				}else{
-
 					EntityDrawer.drawEmptyGround(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+				}
+			}
+		}
 
-					if(entityBeingDrawn != null){
+		for(Entity entityBeingDrawn: gmap.getContainedEntities()){
+			int x = entityBeingDrawn.getXTileCoordinate();
+			int y = entityBeingDrawn.getYTileCoordinate();
+			entityBeingDrawn = gmap.getEntityAtLocation(x, y);//this is the entity we are going to draw.
 
-						
-						double offsets[] = Distance.getPixleOffsets( entityBeingDrawn.getMovementVectorLength(),entityBeingDrawn.getFacingDirection());
-						System.out.println("Length left: "+entityBeingDrawn.getMovementVectorLength()+" Offsets: "+offsets[0]+","+offsets[1]);
-						if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
-							EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], y*cellHeight+(int)offsets[1], cellWidth, cellHeight, (Dwarf)entityBeingDrawn);
-						}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
-							EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
-						}
-
+			int range = Distance.range(focusedPlayer.getXTileCoordinate(), focusedPlayer.getYTileCoordinate(), x, y);
+			if(range <= MAX_RANGE){
+				EntityDrawer.drawEmptyGround(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+				if(entityBeingDrawn != null){
+					double offsets[] = Distance.getPixleOffsets( entityBeingDrawn.getMovementVectorLength(),entityBeingDrawn.getFacingDirection());
+					if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
+						EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], y*cellHeight+(int)offsets[1], cellWidth, cellHeight, (Dwarf)entityBeingDrawn);
+					}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
+						EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 					}
 
-					EntityDrawer.drawFog(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight,(1-Math.min(1.0f,range/MAX_RANGE)));
+				}
+
+
+			}
+		}
+		
+		for(int y = 0; y < gmap.getHeight(); y++ ){//well start with each row
+			for(int x = 0; x < gmap.getWidth(); x++){//and then go through each x coordinate
+				int range = Distance.range(focusedPlayer.getXTileCoordinate(), focusedPlayer.getYTileCoordinate(), x, y);
+				if(range <= MAX_RANGE){
+					EntityDrawer.drawFog(graphicsObject,x*cellWidth, y*cellHeight, cellWidth, cellHeight, 1 - range/MAX_RANGE);
 				}
 
 				if(drawGridOutline ==true){

@@ -3,12 +3,13 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class KeyboardManager implements KeyListener{
 
 	//This is the array that will hold non-movement keys that are currently pressed.
 	private ArrayList<Integer> otherPressedKeys;
-	
+
 	//This is the array that will hold movement related keys
 	private ArrayList<Integer> pressedMovementKeys;
 
@@ -20,28 +21,30 @@ public class KeyboardManager implements KeyListener{
 		pressedMovementKeys = new ArrayList<Integer>();
 	}
 
-	public synchronized ArrayList<Integer> getOtherPressedKeys(){
-		return otherPressedKeys;
+	public List<Integer> getOtherPressedKeys(){
+		@SuppressWarnings("unchecked")
+		List<Integer> retList = (List<Integer>) this.otherPressedKeys.clone();
+		this.otherPressedKeys.clear();
+		return retList;
 	}
-	
-	public synchronized ArrayList<Integer> getPressedMovementKeys(){
-		return pressedMovementKeys;
+
+	public List<Integer> getPressedMovementKeys(){
+		return this.pressedMovementKeys;
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		int keyCode = arg0.getKeyCode();
-
 		if(keyCode == 65 || keyCode == 68 || keyCode == 83 || keyCode == 87){
 			if(getPressedMovementKeys().contains(keyCode) == false){
 				getPressedMovementKeys().add(keyCode);
 			}
-			
+
 		}else{
 			if(getOtherPressedKeys().contains(keyCode) == false){
-				getOtherPressedKeys().add(keyCode);
+				this.otherPressedKeys.add(keyCode);
 			}
-	
+
 		}
 		eventsProccessed++;
 	}
@@ -51,13 +54,9 @@ public class KeyboardManager implements KeyListener{
 		int keyCode = arg0.getKeyCode();
 		if(keyCode == 65 || keyCode == 68 || keyCode == 83 || keyCode == 87){
 			if(getPressedMovementKeys().contains(keyCode) == true){
-				getPressedMovementKeys().remove((Integer)keyCode);
+				this.pressedMovementKeys.remove((Integer)keyCode);
 			}
-		}else{
-			if(getOtherPressedKeys().contains(keyCode) == true){
-				getOtherPressedKeys().remove((Integer)keyCode);
-			}
-	
+
 		}
 		eventsProccessed++;
 	}
