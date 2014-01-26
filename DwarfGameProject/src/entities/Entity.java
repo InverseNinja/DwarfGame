@@ -1,21 +1,32 @@
 package entities;
 
+import graphics.Light;
+
+import java.awt.Point;
+import java.util.ArrayList;
+
 public abstract class Entity {
 
-	private int[] tileCoordinates = new int[2];
+	private Point tileCoordinates = new Point();
 
 	private int facingDirection = 2;
 
 	private double movementVectorLength;//pixels
 
-	private double speed = 5;//pixels/tick
+	private double speed = 10;//pixels/tick
 	
 	private static final double SQRT2 = Math.sqrt(2);
 	
-	private int widthInTiles = 2;
+	protected int widthInTiles = 1;
 
-	private int heightInTiles = 2;
+	protected int heightInTiles = 1;
+	
+	private ArrayList<Light> ownedLightSources;
 
+	public Entity(){
+		this.ownedLightSources = new ArrayList<Light>();
+	}
+	
 	public double getMovementVectorLength() {
 		return movementVectorLength;
 	}
@@ -40,7 +51,11 @@ public abstract class Entity {
 	}
 
 	public int[] getTileCoordinates(){
-		return tileCoordinates;
+		return new int[]{tileCoordinates.x,tileCoordinates.y};
+	}
+	
+	public Point getTileCoordinatesPoint(){
+		return this.tileCoordinates;
 	}
 
 	public void setTileCoordinates(int x, int y){
@@ -49,11 +64,11 @@ public abstract class Entity {
 	}
 
 	public void setXTileCoordinate(int x){
-		tileCoordinates[0] = x;
+		tileCoordinates.x = x;
 	}
 
 	public void setYTileCoordinate(int y){
-		tileCoordinates[1] = y;
+		tileCoordinates.y = y;
 	}
 
 	public int getXTileCoordinate(){
@@ -86,5 +101,13 @@ public abstract class Entity {
 
 	public void setHeightInTiles(int heightInTiles) {
 		this.heightInTiles = heightInTiles;
+	}
+	
+	public ArrayList<Light> getOwnedLights(){
+		return this.ownedLightSources;
+	}
+	
+	public void addLight(Light l){
+		this.ownedLightSources.add(l);
 	}
 }

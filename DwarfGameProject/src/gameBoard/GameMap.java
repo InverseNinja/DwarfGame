@@ -5,12 +5,11 @@ import java.util.List;
 
 import entities.Entity;
 import graphics.Animation;
+import graphics.Light;
 
 public class GameMap {
 	
 	private Entity gameMap[][];
-	
-	private List<ArrayList<Entity>> sortedEntitiesByHeight = new ArrayList<ArrayList<Entity>>();
 	
 	/**
 	 * This is the height of the map in cells or how many cells will be contained per column (up to down)
@@ -24,7 +23,9 @@ public class GameMap {
 
 	private ArrayList<Entity> containedEntities;
 	
-	public ArrayList<Animation> animations = new ArrayList<Animation>();
+	private ArrayList<Light> containedLightSources;
+	
+	private ArrayList<Animation> animations = new ArrayList<Animation>();
 	
 	/**
 	 * Creates a gameMap with the given dimensions
@@ -36,15 +37,21 @@ public class GameMap {
 		this.height = height;
 		gameMap = new Entity[width][height];
 		containedEntities = new ArrayList<Entity>();
+		containedLightSources = new ArrayList<Light>();
+	}
+
+	public void addLight(Light light){
+		this.containedLightSources.add(light);
 	}
 	
-//	public void addEntity(int x, int y, Entity entity){
-//		entity.setTileCoordinates(x, y);
-//		this.addEntity(entity);
-//	}
+	public void addAnimation(Animation a){
+		this.animations.add(a);
+		if(a instanceof Light){
+			this.containedLightSources.add((Light)a);
+		}
+	}
 	
 	private void placeEntity(int x, int y, Entity entity){
-		System.out.println("Placing entity at: "+x+", "+y);
 		int width = entity.getWidthInTiles();
 		int height = entity.getHeightInTiles();
 		for(int i = 0; i < height; i++){
@@ -78,6 +85,14 @@ public class GameMap {
 		}
 		entity.setTileCoordinates(x, y);
 		containedEntities.add(entity);
+		if(entity instanceof Light){
+			containedLightSources.add((Light) entity);
+		}
+		if(entity.getOwnedLights().size()>0){
+			for(Light l: entity.getOwnedLights()){
+				containedLightSources.add(l);
+			}
+		}
 	}
 	
 	public void addEntity(Entity entity){
@@ -86,30 +101,11 @@ public class GameMap {
 	
 	public void removeEntity(int x, int y){
 		containedEntities.remove(gameMap[x][y]);
+		if(gameMap[x][y] instanceof Light){
+			containedLightSources.remove((Light) gameMap[x][y]);
+		}
 		gameMap[x][y] = null;
 	}
-	
-//	public void moveEntity(int xStart, int yStart, int xEnd, int yEnd) throws Exception{
-//		if(gameMap[xStart][yStart]==null){
-//			throw new Exception("Tried to move entity at: ("+xStart+","+yStart+") but this location contained null.");
-//		}
-//		
-//		gameMap[xEnd][yEnd] = gameMap[xStart][yStart];
-//		gameMap[xStart][yStart] = null;
-//		gameMap[xEnd][yEnd].setTileCoordinates(xEnd, yEnd);
-//	}
-	
-//	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
-//		if(!containedEntities.contains(entity)){
-//			throw new Exception("The entity: "+entity.toString()+" is not located on this map.");
-//		}
-//
-//		if(gameMap[entity.getXTileCoordinate()][entity.getYTileCoordinate()] != entity){
-//			throw new Exception("According to this map, a different entity at the given entities location ("+entity.getXTileCoordinate()+","+entity.getYTileCoordinate()+") already exists.");
-//		}
-//		
-//		this.moveEntity(entity.getXTileCoordinate(), entity.getYTileCoordinate(), xEnd, yEnd);
-//	}
 	
 	public void moveEntity(Entity entity, int xEnd, int yEnd) throws Exception{
 		if(!containedEntities.contains(entity)){
@@ -150,6 +146,14 @@ public class GameMap {
 	
 	public ArrayList<Entity> getContainedEntities(){
 		return containedEntities;
+	}
+
+	public ArrayList<Animation> getContainedAnimations(){
+		return animations;
+	}
+	
+	public List<Light> getContainedLights() {
+		return this.containedLightSources;
 	}
 
 }

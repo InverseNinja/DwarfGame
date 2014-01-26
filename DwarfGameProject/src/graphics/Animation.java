@@ -15,6 +15,10 @@ public abstract class Animation {
 	protected long timeDelay;
 
 	protected long lastUpdatedTime;
+	
+	protected double width = 1;
+	
+	protected double height = 1;
 
 	public void update(){
 		long currentTime = System.currentTimeMillis();
@@ -33,6 +37,28 @@ public abstract class Animation {
 	}
 	
 	public void draw(Graphics2D g,int x, int y, int width, int height){
-		g.drawImage(imageSequences[sequenceIndex], position.x, position.y, width, height, null);
+		g.drawImage(imageSequences[sequenceIndex], x, y, width, height, null);
+	}
+	
+	public double getWidth(){
+		return this.width;
+	}
+	
+	public double getHeight(){
+		return this.height;
+	}
+
+	public int getYCoordinate() {
+		// TODO Auto-generated method stub
+		return this.position.y;
+	}
+
+	public int getXCoordinate() {
+		// TODO Auto-generated method stub
+		return this.position.x;
+	}
+	
+	public void setPosition(Point p){
+		this.position = p;
 	}
 }

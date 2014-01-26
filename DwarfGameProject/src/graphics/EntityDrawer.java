@@ -92,8 +92,8 @@ public class EntityDrawer {
 		graphicsObject.fillRect(xCoordinate, yCoordinate, width, height);
 	}
 	
-	public static void drawFog(Graphics graphicsObject, int xCoordinate, int yCoordinate,int width, int height,float darkness){
-		graphicsObject.setColor(new Color(0f,0f,0f,1-darkness));
+	public static void drawFog(Graphics graphicsObject, int xCoordinate, int yCoordinate,int width, int height,Color c){
+		graphicsObject.setColor(c);
 		graphicsObject.fillRect(xCoordinate, yCoordinate, width, height);
 	}
 }

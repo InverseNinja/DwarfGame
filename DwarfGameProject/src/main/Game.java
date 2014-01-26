@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Point;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -11,12 +12,13 @@ import gameBoard.GameMap;
 import graphics.Animation;
 import graphics.Fire;
 import graphics.GameFrame;
+import graphics.PlainLight;
 
 public class Game {
 
 	private boolean gameInProgress;
 
-	public static final long TICK_RATE = 20;
+	public static final long TICK_RATE = 10;
 
 	private static int GAME_TIME_IN_TICKS = 0;
 
@@ -66,12 +68,19 @@ public class Game {
 	public void loadinitialGameState(){
 		//Make The Player
 		player = new Dwarf();
+		PlainLight l = new PlainLight();
+		l.setLightRadius(7);
+		l.setPosistion(player.getTileCoordinatesPoint());
+		System.out.println("Added light: "+l.getLightPosition()+" "+player.getTileCoordinatesPoint());
+		player.addLight(l);
 
 		//Add the player and entites to the map
 		gmap = new GameMap(50, 50);
-		gmap.addEntity(0,1,player);
+		gmap.addEntity(2,2,player);
 		gmap.addEntity(5,5,new Gold());
-		gmap.animations.add(new Fire());
+		Fire f = new Fire();
+		f.setPosition(new Point(10,10));
+		gmap.addAnimation(f);
 		gameUI.setFocusedPlayer(player);
 		gameUI.setWorld(gmap);
 	}
@@ -99,7 +108,7 @@ public class Game {
 				for(Entity e: gmap.getContainedEntities()){
 					e.tick();
 				}
-				for(Animation a: gmap.animations){
+				for(Animation a: gmap.getContainedAnimations()){
 					a.update();
 				}
 			} catch (Exception e1) {

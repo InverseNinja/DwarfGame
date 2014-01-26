@@ -17,9 +17,9 @@ public class GameFrame extends JFrame{
 	
 	private Entity player;
 	
-	public int cellWidth = 40;
+	public int cellWidth = 50;
 	
-	public int cellHeight = 40;
+	public int cellHeight = 50;
 	
 	public GameFrame(){
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -5,10 +5,11 @@ import java.awt.Point;
 
 import javax.swing.ImageIcon;
 
-public class Fire extends Animation{
+public class Fire extends Animation implements Light{
 
+	private int lightRadius = 12;
+	
 	public Fire(){
-		this.position = new Point(0,0);
 		this.imageSequences = new Image[12];
 		imageSequences[0] = new ImageIcon("Resources\\AnimationImages\\Fire\\fire5.png").getImage();
 		imageSequences[1] = new ImageIcon("Resources\\AnimationImages\\Fire\\fire6.png").getImage();
@@ -23,5 +24,17 @@ public class Fire extends Animation{
 		imageSequences[10] = new ImageIcon("Resources\\AnimationImages\\Fire\\fire15.png").getImage();
 		imageSequences[11] = new ImageIcon("Resources\\AnimationImages\\Fire\\fire16.png").getImage();
 		this.timeDelay = 100;
+		this.width = 2;
+		this.height = 2;
+	}
+
+	@Override
+	public int getLightRadius() {
+		return lightRadius;
+	}
+
+	@Override
+	public Point getLightPosition() {
+		return this.position;
 	}
 }
