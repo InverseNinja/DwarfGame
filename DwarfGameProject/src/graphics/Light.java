@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Point;
 
 public interface Light {
@@ -8,5 +9,7 @@ public interface Light {
 	
 	public Point getLightPosition();
 	
+	public Color getLightColor();
 	
+	public float getIntensity();
 }

@@ -1,10 +1,17 @@
 package main;
 
+import items.Inventory;
+
 import java.awt.Point;
 import java.util.List;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import ui.InventoryPanel;
 import entities.Dwarf;
 import entities.Entity;
 import entities.Gold;
@@ -30,8 +37,8 @@ public class Game {
 
 	private KeyboardManager kbm;
 
-
 	public static void main(String[] args){
+		
 		SwingUtilities.invokeLater(new Runnable(){
 
 			@Override
@@ -59,6 +66,12 @@ public class Game {
 		gameUI = new GameFrame();
 		gameUI.addKeyListener(kbm);
 		gameUI.setVisible(true);
+		
+//		testFrame = new JFrame();
+//		testFrame.add(new InventoryPanel(new Inventory()));
+//		testFrame.setDefaultCloseOperation(3);
+//		testFrame.setVisible(true);
+		
 	}
 
 	/**
@@ -156,7 +169,7 @@ public class Game {
 	}
 
 	private void handleKeysPressed(List<Integer> otherKeys, List<Integer> movementKeys) throws Exception{
-//		System.out.println(otherKeys.size()+", "+movementKeys.size());s
+		//		System.out.println(otherKeys.size()+", "+movementKeys.size());s
 		if(movementKeys.size()>0 && player.getMovementVectorLength() ==0){
 			int xGridOffset = 0;
 			int yGridOffset = 0;
@@ -237,6 +250,9 @@ public class Game {
 			switch(keyCode){
 			case 61: //tab
 				gameUI.toggleGrid();
+				break;
+			case 73: //tab
+				gameUI.toggleinventory();
 				break;
 			}
 		}

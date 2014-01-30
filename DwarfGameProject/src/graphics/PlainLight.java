@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Point;
 
 public class PlainLight implements Light{
@@ -7,6 +8,8 @@ public class PlainLight implements Light{
 	private int radius = 0;
 	
 	private Point position;
+	
+	private Color color;
 	
 	public void setLightRadius(int radius){
 		this.radius = radius;
@@ -26,6 +29,20 @@ public class PlainLight implements Light{
 	public Point getLightPosition() {
 		// TODO Auto-generated method stub
 		return position;
+	}
+
+	@Override
+	public Color getLightColor() {
+		if(color == null){
+			color = new Color(0f,0f,0f);
+		}
+		return color;
+	}
+
+	@Override
+	public float getIntensity() {
+		// TODO Auto-generated method stub
+		return .7f;
 	}
 
 }

@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
@@ -8,6 +9,15 @@ import javax.swing.ImageIcon;
 public class Fire extends Animation implements Light{
 
 	private int lightRadius = 12;
+	
+	private Color color;
+	
+	private long lastUpdateTime;
+	
+	private long nextDuration;
+	
+	private float intensity;
+	
 	
 	public Fire(){
 		this.imageSequences = new Image[12];
@@ -26,6 +36,7 @@ public class Fire extends Animation implements Light{
 		this.timeDelay = 100;
 		this.width = 2;
 		this.height = 2;
+		this.nextDuration = (long) (Math.random()*500);
 	}
 
 	@Override
@@ -36,5 +47,32 @@ public class Fire extends Animation implements Light{
 	@Override
 	public Point getLightPosition() {
 		return this.position;
+	}
+
+	@Override
+	public Color getLightColor() {
+		if(color == null){
+			color = new Color(255,42,0);
+		}
+		return color;
+	}
+	
+	@Override
+	public void update(){
+		super.update();
+		long currentTime = System.currentTimeMillis();
+		if(currentTime - lastUpdateTime > nextDuration){
+			//change intensity
+			intensity = .45f+.10f*(float) Math.random();
+			this.color = new Color(200,(int) (42+(Math.random()*40)),0);
+			lastUpdateTime = currentTime;
+			nextDuration = (long) (Math.random()*500);
+		}
+	}
+
+	@Override
+	public float getIntensity() {
+		// TODO Auto-generated method stub
+		return this.intensity;
 	}
 }

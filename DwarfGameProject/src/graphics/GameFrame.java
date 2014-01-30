@@ -1,9 +1,18 @@
 package graphics;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
+import items.Inventory;
 import entities.Entity;
 import gameBoard.GameMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+
+import ui.InventoryPanel;
 
 public class GameFrame extends JFrame{
 
@@ -15,15 +24,28 @@ public class GameFrame extends JFrame{
 
 	private WorldWindow theWorldsWindow;
 	
+	private InventoryPanel inventoryPanel;
+	
 	private Entity player;
 	
 	public int cellWidth = 50;
 	
 	public int cellHeight = 50;
 	
+	
 	public GameFrame(){
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(800, 600);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setUndecorated(true);
+//		this.setLayout(new BoxLayout(null, BoxLayout.Y_AXIS));
+		this.setInventoryToDisplay(new Inventory());
+	}
+	
+	public void setInventoryToDisplay(Inventory i){
+		this.inventoryPanel = new InventoryPanel(i);
+		if(theWorldsWindow != null){
+			this.add(inventoryPanel);
+		}
 	}
 
 	public void setFocusedPlayer(Entity player){
@@ -38,10 +60,21 @@ public class GameFrame extends JFrame{
 			this.remove(theWorldsWindow);
 		}
 		theWorldsWindow = new WorldWindow(gmap, cellWidth, cellHeight);
+		
+		if(inventoryPanel != null){
+			this.add(inventoryPanel);
+		}
+		
 		this.add(theWorldsWindow);
 		
 		if(player != null){
 			theWorldsWindow.setPerspective(player);
+		}
+	}
+	
+	public void toggleinventory(){
+		if(inventoryPanel != null){
+			inventoryPanel.setVisible(!inventoryPanel.isVisible());
 		}
 	}
 

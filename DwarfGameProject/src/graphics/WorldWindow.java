@@ -35,6 +35,7 @@ public class WorldWindow extends JPanel{
 		this.setDoubleBuffered(true);
 		this.cellHeight = cellHeight;
 		this.cellWidth = cellWidth;
+		this.setBackground(Color.black);
 	}
 
 	@Override
@@ -50,6 +51,8 @@ public class WorldWindow extends JPanel{
 	 */
 	private void drawWorld(Graphics2D graphicsObject){
 		//draw stuff
+		double focusonOffsets[] = Distance.getPixleOffsets( focusedPlayer.getMovementVectorLength(),focusedPlayer.getFacingDirection());
+		graphicsObject.translate((focusedPlayer.getXTileCoordinate()*-cellWidth)+(this.getWidth()/2f)-focusonOffsets[0], (focusedPlayer.getYTileCoordinate()*-cellHeight)+(this.getHeight()/2f)-focusonOffsets[1]);
 		Color[][] lightMap = WorldWindow.getLightingMap(gmap);
 
 		for(int y = 0; y < gmap.getHeight(); y++ ){//well start with each row
@@ -82,7 +85,7 @@ public class WorldWindow extends JPanel{
 						EntityDrawer.drawEmptyGround(graphicsObject, xunitWidth*cellWidth, yUnitWidth*cellHeight, cellWidth, cellHeight);
 					}
 				}
-				
+
 				//now draw the entity
 				double offsets[] = Distance.getPixleOffsets( entityBeingDrawn.getMovementVectorLength(),entityBeingDrawn.getFacingDirection());
 				if(entityBeingDrawn instanceof Dwarf){//if its a dwarf draw a dwarf here
@@ -90,7 +93,7 @@ public class WorldWindow extends JPanel{
 				}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
 					EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
 				}
-				
+
 				//now draw fog and a grid
 				for(int xunitWidth = entityBeingDrawn.getXTileCoordinate(); xunitWidth < entityBeingDrawn.getXTileCoordinate()+entityBeingDrawn.getWidthInTiles(); xunitWidth++){
 					for(int yUnitWidth = entityBeingDrawn.getYTileCoordinate(); yUnitWidth > entityBeingDrawn.getYTileCoordinate()-entityBeingDrawn.getHeightInTiles(); yUnitWidth--){
@@ -108,6 +111,7 @@ public class WorldWindow extends JPanel{
 		for(Animation a: gmap.getContainedAnimations()){
 			a.draw(graphicsObject,cellWidth*a.getXCoordinate(),cellWidth*a.getYCoordinate(), (int)(cellWidth*a.getWidth()), (int)(cellHeight*a.getHeight()));
 		}
+
 	}
 
 	private static Color[][] getLightingMap(GameMap gmap){
@@ -124,12 +128,18 @@ public class WorldWindow extends JPanel{
 						int distance = Distance.range(x, y, lxs, lys);
 						if(distance - rad <= 0){
 							Color existingColor = retMap[x][y];
+							Color lightColor = l.getLightColor();
 							if(existingColor == null){
-								Color newColor = new Color(0,0,0,distance/((float)rad));
+								float intensity = Math.max(0, 1-((distance/((float)rad))/l.getIntensity()));
+								Color newColor = new Color(intensity*lightColor.getRed()/255f,intensity*lightColor.getGreen()/255f,intensity*lightColor.getBlue()/255f,distance/((float)rad));
 								retMap[x][y] = newColor;
 							}else{
 								float alpha = (existingColor.getAlpha()/255f)*(distance/((float)rad));
-								retMap[x][y] = new Color(0,0,0,alpha);
+								float intensity = Math.max(0, 1-((distance/((float)rad))/l.getIntensity()));
+								float red = Math.max(existingColor.getRed()/255f,intensity*lightColor.getRed()/255f);
+								float green = Math.max(existingColor.getGreen()/255f,intensity*lightColor.getGreen()/255f);
+								float blue = Math.max(existingColor.getBlue()/255f,intensity*lightColor.getBlue()/255f);
+								retMap[x][y] = new Color(red,green,blue,alpha);
 							}
 						}
 
