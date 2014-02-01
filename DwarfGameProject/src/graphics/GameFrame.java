@@ -1,17 +1,12 @@
 package graphics;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-
 import items.Inventory;
 import entities.Entity;
 import gameBoard.GameMap;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import Utilities.GameValues;
 import ui.InventoryPanel;
 
 public class GameFrame extends JFrame{
@@ -28,12 +23,13 @@ public class GameFrame extends JFrame{
 	
 	private Entity player;
 	
-	public int cellWidth = 50;
+	public int cellWidth = 40;
 	
-	public int cellHeight = 50;
+	public int cellHeight = 40;
 	
 	
 	public GameFrame(){
+		GameValues.GAME_TILE_WIDTH = this.cellWidth;
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setUndecorated(true);

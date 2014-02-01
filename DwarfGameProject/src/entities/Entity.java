@@ -1,5 +1,6 @@
 package entities;
 
+import graphics.Animation;
 import graphics.Light;
 
 import java.awt.Point;
@@ -11,9 +12,9 @@ public abstract class Entity {
 
 	private int facingDirection = 2;
 
-	private double movementVectorLength;//pixels
+	protected double movementVectorLength;//pixels
 
-	private double speed = 10;//pixels/tick
+	protected double speed = 1;//pixels/tick
 	
 	private static final double SQRT2 = Math.sqrt(2);
 	
@@ -39,6 +40,10 @@ public abstract class Entity {
 		}
 	}
 
+	//TODO: needed?
+	public Animation getAnimation(){
+		return null;
+	}
 
 	public void tick(){
 

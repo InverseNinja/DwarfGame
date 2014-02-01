@@ -19,6 +19,7 @@ public class Fire extends Animation implements Light{
 	private float intensity;
 	
 	
+	
 	public Fire(){
 		this.imageSequences = new Image[12];
 		imageSequences[0] = new ImageIcon("Resources\\AnimationImages\\Fire\\fire5.png").getImage();

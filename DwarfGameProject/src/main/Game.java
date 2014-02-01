@@ -1,17 +1,11 @@
 package main;
 
-import items.Inventory;
 
 import java.awt.Point;
 import java.util.List;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import ui.InventoryPanel;
 import entities.Dwarf;
 import entities.Entity;
 import entities.Gold;
@@ -25,7 +19,7 @@ public class Game {
 
 	private boolean gameInProgress;
 
-	public static final long TICK_RATE = 10;
+	public static final long TICK_RATE = 15;
 
 	private static int GAME_TIME_IN_TICKS = 0;
 
@@ -84,7 +78,6 @@ public class Game {
 		PlainLight l = new PlainLight();
 		l.setLightRadius(7);
 		l.setPosistion(player.getTileCoordinatesPoint());
-		System.out.println("Added light: "+l.getLightPosition()+" "+player.getTileCoordinatesPoint());
 		player.addLight(l);
 
 		//Add the player and entites to the map
@@ -93,6 +86,7 @@ public class Game {
 		gmap.addEntity(5,5,new Gold());
 		Fire f = new Fire();
 		f.setPosition(new Point(10,10));
+		
 		gmap.addAnimation(f);
 		gameUI.setFocusedPlayer(player);
 		gameUI.setWorld(gmap);
@@ -169,7 +163,6 @@ public class Game {
 	}
 
 	private void handleKeysPressed(List<Integer> otherKeys, List<Integer> movementKeys) throws Exception{
-		//		System.out.println(otherKeys.size()+", "+movementKeys.size());s
 		if(movementKeys.size()>0 && player.getMovementVectorLength() ==0){
 			int xGridOffset = 0;
 			int yGridOffset = 0;

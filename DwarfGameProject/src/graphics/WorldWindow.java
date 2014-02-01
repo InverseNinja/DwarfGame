@@ -10,6 +10,7 @@ import Utilities.Distance;
 import entities.Dwarf;
 import entities.Entity;
 import entities.Gold;
+import entities.Marine;
 import gameBoard.GameMap;
 
 public class WorldWindow extends JPanel{
@@ -19,9 +20,9 @@ public class WorldWindow extends JPanel{
 	 */
 	private static final long serialVersionUID = 8851154365224541643L;
 
-	private int cellWidth = 20;
+	private int cellWidth = 30;
 
-	private int cellHeight = 20;
+	private int cellHeight = 30;
 
 	private GameMap gmap;
 
@@ -92,6 +93,9 @@ public class WorldWindow extends JPanel{
 					EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], (y*cellHeight+(int)offsets[1])-cellHeight*(entityBeingDrawn.getWidthInTiles()-1), cellWidth*entityBeingDrawn.getWidthInTiles(), cellHeight*entityBeingDrawn.getHeightInTiles(), (Dwarf)entityBeingDrawn);
 				}else if(entityBeingDrawn instanceof Gold){//if its gold then draw some gold here
 					EntityDrawer.drawGold(graphicsObject, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+				}else if(entityBeingDrawn instanceof Marine){//if its a dwarf draw a dwarf here
+//					EntityDrawer.drawDwarf(graphicsObject, (x*cellWidth)+(int)offsets[0], (y*cellHeight+(int)offsets[1])-cellHeight*(entityBeingDrawn.getWidthInTiles()-1), cellWidth*entityBeingDrawn.getWidthInTiles(), cellHeight*entityBeingDrawn.getHeightInTiles(), (Dwarf)entityBeingDrawn);
+					entityBeingDrawn.getAnimation().draw(graphicsObject, (x*cellWidth)+(int)offsets[0], (y*cellHeight+(int)offsets[1])-cellHeight*(entityBeingDrawn.getWidthInTiles()-1), cellWidth*entityBeingDrawn.getWidthInTiles(), cellHeight*entityBeingDrawn.getHeightInTiles());
 				}
 
 				//now draw fog and a grid
